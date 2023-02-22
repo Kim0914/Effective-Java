@@ -53,6 +53,36 @@
 ## ***그렇다면 toString을 어떻게 사용하는 것이 좋을까?***
 
 실제 toString은 해당 객체가 가진 주요 정보를 모두 반환하는 것이 좋다.
+```java
+public class ToStringExample {
+  private static final int STATIC_VAR = 10;
+  private String name;
+  private Shape shape = new Square(5, 10);
+  private String[] tags;
+  private int id;
+  
+  public String getName() {
+    return this.name;
+  }
+  
+  public static class Square extends Shape {
+    private final int width, height;
+    
+    public Square(int width, int height) {
+      this.width = width;
+      this.height = height;
+    }
+    
+    @Override public String toString() {
+      return "Square(super=" + super.toString() + ", width=" + this.width + ", height=" + this.height + ")";
+    }
+  }
+  
+  @Override public String toString() {
+    return "ToStringExample(" + this.getName() + ", " + this.shape + ", " + Arrays.deepToString(this.tags) + ")";
+  }
+}
+```
 
 단, 정적 유틸리티 클래스의 경우 toString 을 제공할 필요가 없다. 또한 대부분의 Enum 타입은 이미 자바가 완벽한 toString 을 제공하므로 재정의할 필요 없다.
 
@@ -63,3 +93,9 @@ Stackoverflow 의 [Is it ok to add toString() to ease debugging?](https://stack
 그렇다면, 로깅과 디버깅의 용도 외로 프로덕션 코드에는 **`toString`** 을 사용하면 안되는 것 일까?Stackoverflow 의 [Java toString for debugging or actual logical use](https://stackoverflow.com/questions/19911290/java-tostring-for-debugging-or-actual-logical-use) 와 [Is toString() only useful for debugging?](https://stackoverflow.com/questions/563676/is-tostring-only-useful-for-debugging) 를 읽어보면, 의견이 조금 갈릴수도 있으나 특이한 케이스를 제외하면 **`toString`** 은 디버그만을 위해 사용되는 것이 올바르다고 생각된다.
 
 또한, 캐시를 사용하는 경우 기본 값으로 클래스의 `toString`을 식별자로 사용한다. 즉, toString은 해당 객체를 식별할 수 있도록 객체가 가진 주요 정보를 모두 담고 있는 메서드라고 볼 수 있다.
+
+## 정리
+```java
+모든 구체(구현) 클래스에서 Object의 toString을 재정의하자.
+toString을 재정의한 클래스는 사용하기 편하고 디버깅하기도 쉽다.
+```
